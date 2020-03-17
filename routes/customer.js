@@ -42,10 +42,9 @@ router.post('/newCustomer', (req, res) => {
     if (query.Fname.length < 0 && query.UserId < 0 && query.Password < 0 && query.Email < 0) {
         flag = false
     }
-    console.log(flag)
-    if (flag == true) { /*  |  */
-        query["type"] = "customer" /*Will add rest of the fields here v */
-        customerModel(query).update({ "UserId": query.UserId, "Password": query.Password }, { $set: { "Fname": query.Fname, "Lname": query.Lname } }, { upsert: true }, (err, data) => {
+    if (flag == true) {
+        //query["type"] = "admin"
+        customerModel.updateOne({ "UserId": query.UserId }, { $set: { "Fname": query.Fname, "Lname": query.Lname, "Password": query.Password, "Email": query.Email, "Contact": query.Contact, type: "customer" } }, { upsert: true }, (err, data) => {
             if (err)
                 res.json({ msg: "Error in connections", code: -2 })
             else {

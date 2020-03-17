@@ -55,11 +55,12 @@ router.get('/findByTreatment/:treatment', (req, res) => {
 //insert
 router.post('/addNew', (req, res) => {
     var query = req.body.criteria
-    medicineModel(query).save((err, data) => {
+    medicineModel.updateOne({ "Name": query.Name }, { $set: { "Price": query.Price, "Quantity": query.Quantity, "Treatment": query.Treatment, "Deleted": false } }, { upsert: true }, (err, data) => {
         if (err)
             res.json({ msg: "Connection error", code: -2 })
         else {
-            res.json({ msg: "Inserted", code: 0, data: {} })
+
+            res.json({ msg: "Medicine Added", code: 0, data: {} })
         }
     })
 })
