@@ -3,10 +3,11 @@ const router = express.Router()
 const mongoose = require('mongoose')
 
 const medicineSchema = new mongoose.Schema({
+    //id
     "Name": { type: String, required: true },
     "Price": { type: Number, required: false },
     "Quantity": { type: Number, required: true },
-    "Treatment": { type: Array, required: true },
+    "Treatment": { type: Array, required: true }, //cqtegory
     "Deleted": { type: Boolean, required: true }
 }, { strict: false })
 
