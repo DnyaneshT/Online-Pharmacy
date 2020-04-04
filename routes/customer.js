@@ -39,21 +39,40 @@ router.post('/login', (req, res) => {
 router.post('/newCustomer', (req, res) => {
     var query = req.body.criteria
     var flag = true
-    if (query.Fname.length < 0 && query.UserId < 0 && query.Password < 0 && query.Email < 0) {
+    if (query.Fname.length < 1 || query.UserId < 1 || query.Password < 1 || query.Email < 1) {
         flag = false
     }
+    console.log("LENGHT:", query.Fname.length)
     if (flag == true) {
-        //query["type"] = "admin"
-        customerModel.updateOne({ "UserId": query.UserId }, { $set: { "Fname": query.Fname, "Lname": query.Lname, "Password": query.Password, "Email": query.Email, "Contact": query.Contact, type: "customer" } }, { upsert: true }, (err, data) => {
+        customerModel.find({ "UserId": query.UserId }, (err, data) => {
             if (err)
                 res.json({ msg: "Error in connections", code: -2 })
             else {
                 console.log(data)
-                res.json({ msg: "Customer Added", code: 0, })
+                if (data.length > 0) {
+                    res.json({ msg: "Customer Already Exists", code: -1 })
+                } else {
+
+                    //query["type"] = "admin"
+                    //customerModel.updateOne({ "UserId": query.UserId }, { $set: { "Fname": query.Fname, "Lname": query.Lname, "Password": query.Password, "Email": query.Email, "Contact": query.Contact, type: "customer" } }, { upsert: true }, 
+                    customerModel(query).save((err, data) => {
+                        if (err)
+                            res.json({ msg: "Error in connections", code: -2 })
+                        else {
+                            console.log(data)
+                            res.json({ msg: "Customer Added", code: 0 })
+                        }
+                    })
+
+                }
+
             }
         })
     } else {
         res.json({ msg: "Invalid Data", code: -1 })
     }
+
+
+
 })
 module.exports = router
